@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Resume Builder - Interactive Portfolio Generator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <h2>🚀 Dev Resume Builder</h2>
+      <p class="subtitle">Real-time Developer Resume Generator</p>
+      
+      <div class="form-group">
+        <label for="themeSelect">Theme Style</label>
+        <select id="themeSelect">
+          <option value="modern">Modern Tech</option>
+          <option value="minimal">Minimalist Clean</option>
+          <option value="executive">Executive Dark Accent</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button id="printBtn" class="btn btn-primary">🖨️ Print / Save PDF</button>
+        <button id="exportBtn" class="btn btn-secondary">💾 Export JSON</button>
+        <button id="importBtn" class="btn btn-outline">📂 Import JSON</button>
+      </div>
+      <input type="file" id="fileInput" accept=".json" style="display: none;">
+    </aside>
+
+    <main class="preview-area" id="previewArea">
+      <!-- Live resume template output -->
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const previewArea = document.getElementById('previewArea');
+      const themeSelect = document.getElementById('themeSelect');
+      const printBtn = document.getElementById('printBtn');
+      const exportBtn = document.getElementById('exportBtn');
+      const importBtn = document.getElementById('importBtn');
+      const fileInput = document.getElementById('fileInput');
+
+      let currentData = { ...defaultResumeData };
+
+      function render() {
+        previewArea.innerHTML = generateHTMLResume(currentData, themeSelect.value);
+      }
+
+      themeSelect.addEventListener('change', render);
+
+      printBtn.addEventListener('click', () => {
+        window.print();
+      });
+
+      exportBtn.addEventListener('click', () => {
+        const blob = new Blob([exportJSON(currentData)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${currentData.personalInfo.fullName.replace(/\s+/g, '_')}_Resume.json`;
+        a.click();
+      });
+
+      importBtn.addEventListener('click', () => fileInput.click());
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const parsed = parseJSON(event.target.result);
+          if (parsed) {
+            currentData = parsed;
+            render();
+            alert('Resume data imported successfully!');
+          } else {
+            alert('Failed to import JSON: Invalid resume structure.');
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>
