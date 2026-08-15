@@ -7,7 +7,7 @@ const defaultResumeData = {
   personalInfo: {
     fullName: "Syahir Mahmud",
     jobTitle: "Full Stack Software Engineer",
-    email: "syahir@example.com",
+    email: "syahir136erezeki@gmail.com",
     phone: "+60 12-345 6789",
     location: "Kuala Lumpur, Malaysia",
     website: "https://github.com/msyahirmahmud",
