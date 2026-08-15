@@ -1,0 +1,12 @@
+{
+  "name": "dev-resume-builder",
+  "version": "1.0.0",
+  "description": "Interactive Developer Resume & Portfolio Generator with real-time preview and export",
+  "main": "app.js",
+  "scripts": {
+    "test": "node --test tests/app.test.js",
+    "start": "npx serve ."
+  },
+  "author": "Syahir Mahmud",
+  "license": "MIT"
+}
