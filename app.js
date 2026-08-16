@@ -1,6 +1,5 @@
 /**
  * Dev Resume Builder - Core Logic
- * Handles resume data state, real-time preview updates, export/import, and theme toggling.
  */
 
 const defaultResumeData = {
@@ -37,7 +36,19 @@ const defaultResumeData = {
   ]
 };
 
+function calculateResumeCompleteness(data) {
+  if (!data) return 0;
+  let score = 0;
+  if (data.personalInfo && data.personalInfo.fullName) score += 25;
+  if (data.personalInfo && data.personalInfo.email) score += 15;
+  if (Array.isArray(data.skills) && data.skills.length > 0) score += 20;
+  if (Array.isArray(data.experience) && data.experience.length > 0) score += 25;
+  if (Array.isArray(data.education) && data.education.length > 0) score += 15;
+  return score;
+}
+
 function generateHTMLResume(data, theme = "modern") {
+  const completeness = calculateResumeCompleteness(data);
   const skillsHTML = data.skills.map(skill => `<span class="skill-tag">${escapeHTML(skill)}</span>`).join('');
   
   const expHTML = data.experience.map(exp => `
@@ -59,6 +70,7 @@ function generateHTMLResume(data, theme = "modern") {
 
   return `
     <div class="resume-container theme-${theme}">
+      <div class="completeness-bar">Completion: ${completeness}%</div>
       <header class="resume-header">
         <h1>${escapeHTML(data.personalInfo.fullName)}</h1>
         <h2 class="title">${escapeHTML(data.personalInfo.jobTitle)}</h2>
@@ -119,5 +131,5 @@ function parseJSON(jsonString) {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { defaultResumeData, generateHTMLResume, escapeHTML, exportJSON, parseJSON };
+  module.exports = { defaultResumeData, generateHTMLResume, escapeHTML, exportJSON, parseJSON, calculateResumeCompleteness };
 }
