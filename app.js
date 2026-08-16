@@ -37,7 +37,8 @@ const defaultResumeData = {
   ]
 };
 
-function generateHTMLResume(data, theme = "modern") {
+function generateHTMLResume(data, theme = "modern", isDarkMode = false) {
+  const darkClass = isDarkMode ? "dark-theme" : "";
   const skillsHTML = data.skills.map(skill => `<span class="skill-tag">${escapeHTML(skill)}</span>`).join('');
   
   const expHTML = data.experience.map(exp => `
@@ -58,7 +59,7 @@ function generateHTMLResume(data, theme = "modern") {
   `).join('');
 
   return `
-    <div class="resume-container theme-${theme}">
+    <div class="resume-container theme-${theme} ${darkClass}">
       <header class="resume-header">
         <h1>${escapeHTML(data.personalInfo.fullName)}</h1>
         <h2 class="title">${escapeHTML(data.personalInfo.jobTitle)}</h2>
@@ -93,6 +94,10 @@ function generateHTMLResume(data, theme = "modern") {
   `;
 }
 
+function toggleDarkModeState(currentSetting) {
+  return !currentSetting;
+}
+
 function escapeHTML(str) {
   if (!str) return '';
   return String(str)
@@ -119,5 +124,5 @@ function parseJSON(jsonString) {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { defaultResumeData, generateHTMLResume, escapeHTML, exportJSON, parseJSON };
+  module.exports = { defaultResumeData, generateHTMLResume, escapeHTML, exportJSON, parseJSON, toggleDarkModeState };
 }

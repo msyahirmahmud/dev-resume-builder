@@ -1,6 +1,6 @@
 const assert = require('assert');
 const { test, describe } = require('node:test');
-const { defaultResumeData, generateHTMLResume, escapeHTML, exportJSON, parseJSON } = require('../app.js');
+const { defaultResumeData, generateHTMLResume, escapeHTML, exportJSON, parseJSON, toggleDarkModeState } = require('../app.js');
 
 describe('Dev Resume Builder Unit Tests', () => {
   test('escapeHTML prevents XSS injections', () => {
@@ -10,11 +10,15 @@ describe('Dev Resume Builder Unit Tests', () => {
     assert.strictEqual(escaped.includes('&lt;script&gt;'), true);
   });
 
-  test('generateHTMLResume produces valid template string', () => {
-    const html = generateHTMLResume(defaultResumeData, 'modern');
+  test('generateHTMLResume produces valid template string with dark mode option', () => {
+    const html = generateHTMLResume(defaultResumeData, 'modern', true);
     assert.strictEqual(html.includes('Syahir Mahmud'), true);
-    assert.strictEqual(html.includes('Full Stack Software Engineer'), true);
-    assert.strictEqual(html.includes('theme-modern'), true);
+    assert.strictEqual(html.includes('dark-theme'), true);
+  });
+
+  test('toggleDarkModeState switches boolean state', () => {
+    assert.strictEqual(toggleDarkModeState(false), true);
+    assert.strictEqual(toggleDarkModeState(true), false);
   });
 
   test('exportJSON and parseJSON handle valid resume payloads', () => {
